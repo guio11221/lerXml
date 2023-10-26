@@ -9,26 +9,18 @@ describe('Examples', function () {
   it('should test examples', function () {
     var xml = XmlParse(fixture())
 
-    // by tag
-    // console.log(xml.tagValue('service')) // test
+
     assert.strictEqual(xml.tagValue('service'), 'test')
 
-    // by tag and attribute
-    // console.log(xml.tagValue('user', 'role')) // developer
     assert.strictEqual(xml.tagValue('user', 'role'), 'developer')
 
-    // by nested tags
-    // console.log(xml.tagValue('user').tagValue('name')) // djf
     assert.strictEqual(xml.tagValue('user').tagValue('name'), 'djf')
 
-    // by array of tags, matching the first tag found
-    // console.log(xml.tagValue(['not', 'service'])) // test
+
     assert.strictEqual(xml.tagValue(['not', 'service']), 'test')
 
-    // group of tags
     var itens = xml.tagGroup('item')
-    // console.log(itens) // ["<item id=\"1\">first</item>", "<item id=\"2\">second</item>"]
-    // console.log(xml.tagValue('item', 'id')) // 1
+
     assert.strictEqual(itens.length, 2)
     assert.strictEqual(xml.tagValue('item', 'id'), '1')
   })
