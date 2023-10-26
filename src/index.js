@@ -1,5 +1,4 @@
 /**
- * Extract group of tags
  *
  * @param      {<string>}  xml      The xml
  * @param      {<string>}  tagName  The tag name
@@ -16,11 +15,10 @@ function extractGroup (xml, tagName) {
 }
 
 /**
- * Extract value between tags.
  *
- * @param      {<string>}  xml      The xml
- * @param      {<string|array>}  tagName        The tag name
- * @param      {<string>}  attributeName  The attribute name
+ * @param      {<string>}  xml   
+ * @param      {<string|array>}  tagName       
+ * @param      {<string>}  attributeName 
  * @return     {string | null}
  */
 function extract (xml, tagName, attributeName) {
@@ -31,14 +29,14 @@ function extract (xml, tagName, attributeName) {
   var found = null
   var tagFound = null
   for (var i = 0; i < tagName.length; i++) {
-    // without attributes
+
     found = new RegExp(`<${tagName[i]}\\s*>(.+?)</${tagName[i]}>`, 'i').exec(xml)
     if (found) {
       tagFound = tagName[i]
       break
     }
 
-    // with attributes
+ 
     found = new RegExp(`<${tagName[i]} .*?>(.+?)</${tagName[i]}>`, 'i').exec(xml)
     if (found) {
       tagFound = tagName[i]
@@ -57,17 +55,15 @@ function extract (xml, tagName, attributeName) {
 }
 
 /**
- * Determines if it has tags.
  *
- * @param      {<string>}   content  The content
- * @return     {boolean}  True if has tags, False otherwise.
+ * @param      {<string>}   content 
+ * @return     {boolean} 
  */
 function hasTags (content) {
   return (content.split('</', 2)[0] !== content)
 }
 
 /**
- * Return the xml object model based on <xml> specified.
  *
  * @param      {string}  xml     The xml
  * @return     {Object}  {tagValue(), tagGroup()}
