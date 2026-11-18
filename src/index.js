@@ -82,7 +82,7 @@ function hasTags (content) {
  */
 function model (xml) {
   var path = ''
-  var cache = {}
+  var cache = Object.create(null)
   xml = xml && typeof xml === 'string' ? xml.replace(/[\n\r]/gi, '') : ''
 
   return {
@@ -91,7 +91,7 @@ function model (xml) {
         tag = [tag]
       }
 
-      path = tag.join('_') + '_' + (attribute || '')
+      path = JSON.stringify([tag, attribute || ''])
 
       if (typeof cache[path] === 'undefined') {
         cache[path] = extract(xml, tag, attribute)
