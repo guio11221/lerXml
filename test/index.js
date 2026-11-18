@@ -81,6 +81,16 @@ describe('Tests', function () {
     })
   })
 
+  describe('tagGroup without attributes', function () {
+    it('includes plain tags and tags with attributes', function () {
+      var xml = XmlParse('<item>plain</item><item id="1">attributed</item>')
+      assert.deepStrictEqual(xml.tagGroup('item'), [
+        '<item>plain</item>',
+        '<item id="1">attributed</item>'
+      ])
+    })
+  })
+
   describe('invalidTagGroup', function () {
     it('should test for invalid tagGroup() args', function () {
       var xml = XmlParse(fixture())

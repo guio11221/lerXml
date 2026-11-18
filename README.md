@@ -1,6 +1,6 @@
 ### Usage
 ```javascript
-var XmlParse = require('...')
+var XmlParse = require('lerxml')
 function fixture () {
     return '<service>test</service><item id="1">first</item><item id="2">second</item><user role="developer"><name>djf</name></user>'
 }
