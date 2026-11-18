@@ -50,10 +50,11 @@ function extract (xml, tagName, attributeName) {
   }
 
   if (found && attributeName) {
-    var attribute = new RegExp(`<${escapeRegExp(tagFound)} .*?${escapeRegExp(attributeName)}=\"(.+?)\".*?>`, 'i').exec(found[0])
-    if (attribute) {
-      return attribute[1]
-    }
+    // Match a complete attribute name, allowing both XML quote styles.
+    var attributePattern = new RegExp(`\\s${escapeRegExp(attributeName)}\\s*=\\s*(?:"([^"]*)"|'([^']*)')`, 'i')
+    var openingTag = found[0].match(/^<[^>]*>/)
+    var attribute = openingTag && attributePattern.exec(openingTag[0])
+    return attribute ? (attribute[1] === undefined ? attribute[2] : attribute[1]) : null
   }
 
   return found ? found[1] : null
