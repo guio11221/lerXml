@@ -130,7 +130,7 @@ describe('Literal tag matching', function () {
     var xml = XmlParse('<service>ok</service>')
     assert.strictEqual(xml.tagValue('['), null)
     assert.deepStrictEqual(xml.tagGroup('['), [])
-    assert.strictEqual(xml.tagValue('service', '['), 'ok')
+    assert.strictEqual(xml.tagValue('service', '['), null)
   })
 })
 
@@ -162,5 +162,25 @@ describe('XML text preservation', function () {
 
   it('matches an empty element with attributes', function () {
     assert.strictEqual(XmlParse('<empty id="3"></empty>').tagValue('empty'), '')
+  })
+})
+
+describe('XML attribute lookups', function () {
+  it('matches the exact name instead of a suffix of another attribute', function () {
+    var xml = XmlParse('<item data-id="before" id="after">value</item>')
+    assert.strictEqual(xml.tagValue('item', 'id'), 'after')
+    assert.strictEqual(xml.tagValue('item', 'data-id'), 'before')
+  })
+
+  it('supports single quotes and empty attribute values', function () {
+    var xml = XmlParse("<item id='42' empty=''>value</item>")
+    assert.strictEqual(xml.tagValue('item', 'id'), '42')
+    assert.strictEqual(xml.tagValue('item', 'empty'), '')
+  })
+
+  it('returns null when a requested attribute is missing', function () {
+    var xml = XmlParse('<item id="3">value</item>')
+    assert.strictEqual(xml.tagValue('item', 'missing'), null)
+    assert.strictEqual(xml.tagValue('item'), 'value')
   })
 })
