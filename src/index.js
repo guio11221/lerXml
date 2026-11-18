@@ -1,11 +1,20 @@
 /**
+ * Escape user-provided tag names before including them in regular expressions.
+ */
+function escapeRegExp (value) {
+  return String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+}
+
+/**
  *
  * @param      {<string>}  xml      The xml
  * @param      {<string>}  tagName  The tag name
  */
 function extractGroup (xml, tagName) {
   var itens = []
-  var regex = new RegExp(`<${tagName}(?:\\s[^>]*)?>([\\s\\S]*?)</${tagName}>`, 'gi')
+  if (typeof tagName !== 'string' || tagName.length === 0) return itens
+  var escapedTag = escapeRegExp(tagName)
+  var regex = new RegExp(`<${escapedTag}(?:\\s[^>]*)?>([\\s\\S]*?)</${escapedTag}>`, 'gi')
   var result = ''
   for (result = regex.exec(xml); regex.lastIndex !== 0; result = regex.exec(xml)) {
     itens.push(result[0])
@@ -30,14 +39,17 @@ function extract (xml, tagName, attributeName) {
   var tagFound = null
   for (var i = 0; i < tagName.length; i++) {
 
-    found = new RegExp(`<${tagName[i]}\\s*>(.+?)</${tagName[i]}>`, 'i').exec(xml)
+    if (typeof tagName[i] !== 'string' || tagName[i].length === 0) continue
+    var escapedTag = escapeRegExp(tagName[i])
+
+    found = new RegExp(`<${escapedTag}\\s*>(.+?)</${escapedTag}>`, 'i').exec(xml)
     if (found) {
       tagFound = tagName[i]
       break
     }
 
  
-    found = new RegExp(`<${tagName[i]} .*?>(.+?)</${tagName[i]}>`, 'i').exec(xml)
+    found = new RegExp(`<${escapedTag} .*?>(.+?)</${escapedTag}>`, 'i').exec(xml)
     if (found) {
       tagFound = tagName[i]
       break
@@ -45,7 +57,7 @@ function extract (xml, tagName, attributeName) {
   }
 
   if (found && attributeName) {
-    var attribute = new RegExp(`<${tagFound} .*?${attributeName}=\"(.+?)\".*?>`, 'i').exec(found[0])
+    var attribute = new RegExp(`<${escapeRegExp(tagFound)} .*?${escapeRegExp(attributeName)}=\"(.+?)\".*?>`, 'i').exec(found[0])
     if (attribute) {
       return attribute[1]
     }

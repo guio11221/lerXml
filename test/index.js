@@ -118,3 +118,18 @@ describe('Tests', function () {
     })
   })
 })
+
+describe('Literal tag matching', function () {
+  it('matches tag names literally instead of treating them as regular expressions', function () {
+    var xml = XmlParse('<aXb>wrong</aXb><a.b>correct</a.b>')
+    assert.strictEqual(xml.tagValue('a.b'), 'correct')
+    assert.deepStrictEqual(xml.tagGroup('a.b'), ['<a.b>correct</a.b>'])
+  })
+
+  it('does not throw on malformed regex characters supplied as tag names', function () {
+    var xml = XmlParse('<service>ok</service>')
+    assert.strictEqual(xml.tagValue('['), null)
+    assert.deepStrictEqual(xml.tagGroup('['), [])
+    assert.strictEqual(xml.tagValue('service', '['), 'ok')
+  })
+})
