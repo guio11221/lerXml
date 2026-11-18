@@ -5,7 +5,7 @@
  */
 function extractGroup (xml, tagName) {
   var itens = []
-  var regex = new RegExp(`<${tagName}.+?>(.+?)</${tagName}>`, 'gi')
+  var regex = new RegExp(`<${tagName}(?:\\s[^>]*)?>([\\s\\S]*?)</${tagName}>`, 'gi')
   var result = ''
   for (result = regex.exec(xml); regex.lastIndex !== 0; result = regex.exec(xml)) {
     itens.push(result[0])
