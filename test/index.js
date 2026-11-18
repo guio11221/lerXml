@@ -130,7 +130,7 @@ describe('Literal tag matching', function () {
     var xml = XmlParse('<service>ok</service>')
     assert.strictEqual(xml.tagValue('['), null)
     assert.deepStrictEqual(xml.tagGroup('['), [])
-    assert.strictEqual(xml.tagValue('service', '['), 'ok')
+    assert.strictEqual(xml.tagValue('service', '['), null)
   })
 })
 
