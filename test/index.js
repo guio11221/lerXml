@@ -147,3 +147,20 @@ describe('Cache isolation', function () {
     assert.strictEqual(xml.tagValue('service'), 'ok')
   })
 })
+
+describe('XML text preservation', function () {
+  it('returns an empty string for an empty tag', function () {
+    assert.strictEqual(XmlParse('<empty></empty>').tagValue('empty'), '')
+  })
+
+  it('preserves newlines in element text', function () {
+    assert.strictEqual(
+      XmlParse('<message>first\nsecond\r\nthird</message>').tagValue('message'),
+      'first\nsecond\r\nthird'
+    )
+  })
+
+  it('matches an empty element with attributes', function () {
+    assert.strictEqual(XmlParse('<empty id="3"></empty>').tagValue('empty'), '')
+  })
+})
