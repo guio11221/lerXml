@@ -133,3 +133,17 @@ describe('Literal tag matching', function () {
     assert.strictEqual(xml.tagValue('service', '['), 'ok')
   })
 })
+
+describe('Cache isolation', function () {
+  it('does not mix queries that used to share underscore-joined cache keys', function () {
+    var xml = XmlParse('<a_b>one</a_b><a>two</a>')
+    assert.strictEqual(xml.tagValue(['a_b', 'c']), 'one')
+    assert.strictEqual(xml.tagValue(['a', 'b_c']), 'two')
+  })
+
+  it('does not return inherited Object prototype values', function () {
+    var xml = XmlParse('<service>ok</service>')
+    assert.strictEqual(xml.tagValue('__proto_'), null)
+    assert.strictEqual(xml.tagValue('service'), 'ok')
+  })
+})
