@@ -42,14 +42,7 @@ function extract (xml, tagName, attributeName) {
     if (typeof tagName[i] !== 'string' || tagName[i].length === 0) continue
     var escapedTag = escapeRegExp(tagName[i])
 
-    found = new RegExp(`<${escapedTag}\\s*>(.+?)</${escapedTag}>`, 'i').exec(xml)
-    if (found) {
-      tagFound = tagName[i]
-      break
-    }
-
- 
-    found = new RegExp(`<${escapedTag} .*?>(.+?)</${escapedTag}>`, 'i').exec(xml)
+    found = new RegExp(`<${escapedTag}(?:\\s[^>]*)?>([\\s\\S]*?)</${escapedTag}>`, 'i').exec(xml)
     if (found) {
       tagFound = tagName[i]
       break
@@ -83,7 +76,7 @@ function hasTags (content) {
 function model (xml) {
   var path = ''
   var cache = Object.create(null)
-  xml = xml && typeof xml === 'string' ? xml.replace(/[\n\r]/gi, '') : ''
+  xml = xml && typeof xml === 'string' ? xml : ''
 
   return {
     tagValue: (tag, attribute) => {
