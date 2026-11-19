@@ -23,7 +23,7 @@ function extractGroup (xml, tagName) {
   var itens = []
   if (typeof tagName !== 'string' || tagName.length === 0) return itens
   var escapedTag = escapeRegExp(tagName)
-  var regex = new RegExp(`${openingTagSource(tagName)}([\\s\\S]*?)</${escapedTag}>`, 'gi')
+  var regex = new RegExp(`${openingTagSource(tagName)}([\\s\\S]*?)</${escapedTag}>`, 'g')
   var result = ''
   for (result = regex.exec(xml); regex.lastIndex !== 0; result = regex.exec(xml)) {
     itens.push(result[0])
@@ -51,7 +51,7 @@ function extract (xml, tagName, attributeName) {
     if (typeof tagName[i] !== 'string' || tagName[i].length === 0) continue
     var escapedTag = escapeRegExp(tagName[i])
 
-    found = new RegExp(`${openingTagSource(tagName[i])}([\\s\\S]*?)</${escapedTag}>`, 'i').exec(xml)
+    found = new RegExp(`${openingTagSource(tagName[i])}([\\s\\S]*?)</${escapedTag}>`).exec(xml)
     if (found) {
       tagFound = tagName[i]
       break
@@ -60,8 +60,8 @@ function extract (xml, tagName, attributeName) {
 
   if (found && attributeName) {
     // Match a complete attribute name, allowing both XML quote styles.
-    var attributePattern = new RegExp(`\\s${escapeRegExp(attributeName)}\\s*=\\s*(?:"([^"]*)"|'([^']*)')`, 'i')
-    var openingTag = new RegExp(`^${openingTagSource(tagFound)}`, 'i').exec(found[0])
+    var attributePattern = new RegExp(`\\s${escapeRegExp(attributeName)}\\s*=\\s*(?:"([^"]*)"|'([^']*)')`)
+    var openingTag = new RegExp(`^${openingTagSource(tagFound)}`).exec(found[0])
     var attribute = openingTag && attributePattern.exec(openingTag[0])
     return attribute ? (attribute[1] === undefined ? attribute[2] : attribute[1]) : null
   }
