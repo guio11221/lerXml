@@ -184,3 +184,26 @@ describe('XML attribute lookups', function () {
     assert.strictEqual(xml.tagValue('item'), 'value')
   })
 })
+
+
+describe('Quoted delimiters in XML opening tags', function () {
+  it('reads content when a double-quoted attribute includes >', function () {
+    var document = XmlParse('<item title="a > b">content</item>')
+    assert.strictEqual(document.tagValue('item'), 'content')
+    assert.strictEqual(document.tagValue('item', 'title'), 'a > b')
+    assert.deepStrictEqual(document.tagGroup('item'), ['<item title="a > b">content</item>'])
+  })
+
+  it('reads content when a single-quoted attribute includes >', function () {
+    var document = XmlParse("<item note='left > right'>text</item>")
+    assert.strictEqual(document.tagValue('item'), 'text')
+    assert.strictEqual(document.tagValue('item', 'note'), 'left > right')
+    assert.deepStrictEqual(document.tagGroup('item'), ["<item note='left > right'>text</item>"])
+  })
+
+  it('does not mistake a prefixed tag name for the requested tag', function () {
+    var document = XmlParse('<itemization>wrong</itemization><item id="1">correct</item>')
+    assert.strictEqual(document.tagValue('item'), 'correct')
+    assert.deepStrictEqual(document.tagGroup('item'), ['<item id="1">correct</item>'])
+  })
+})
