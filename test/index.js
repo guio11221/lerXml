@@ -207,3 +207,27 @@ describe('Quoted delimiters in XML opening tags', function () {
     assert.deepStrictEqual(document.tagGroup('item'), ['<item id="1">correct</item>'])
   })
 })
+
+
+describe('XML names are case sensitive', function () {
+  it('distinguishes elements whose names differ only by case', function () {
+    var xml = XmlParse('<Item>upper</Item><item>lower</item>')
+    assert.strictEqual(xml.tagValue('Item'), 'upper')
+    assert.strictEqual(xml.tagValue('item'), 'lower')
+    assert.deepStrictEqual(xml.tagGroup('Item'), ['<Item>upper</Item>'])
+    assert.deepStrictEqual(xml.tagGroup('item'), ['<item>lower</item>'])
+  })
+
+  it('does not accept a closing tag with mismatched case', function () {
+    var xml = XmlParse('<item>invalid</ITEM>')
+    assert.strictEqual(xml.tagValue('item'), null)
+    assert.deepStrictEqual(xml.tagGroup('item'), [])
+  })
+
+  it('distinguishes case-sensitive attribute names', function () {
+    var xml = XmlParse('<item Id="upper" id="lower">value</item>')
+    assert.strictEqual(xml.tagValue('item', 'Id'), 'upper')
+    assert.strictEqual(xml.tagValue('item', 'id'), 'lower')
+    assert.strictEqual(xml.tagValue('item', 'ID'), null)
+  })
+})
